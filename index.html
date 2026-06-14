@@ -74,33 +74,102 @@
             left: 12px;
             width: min(440px, calc(100vw - 24px));
             max-height: min(50vh, 360px);
-            overflow-x: hidden;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
             z-index: 9999997;
             background: transparent;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             border: 1px solid rgba(0, 255, 102, 0.3);
             border-radius: 8px;
-            padding: 10px 12px;
+            padding: 0;
             font-family: Consolas, 'Courier New', monospace;
             font-size: 11px;
             line-height: 1.5;
             pointer-events: auto;
             box-shadow: none;
             display: none;
+            flex-direction: column;
+            overflow: hidden;
+            transition: max-height 0.3s ease, top 0.3s ease;
+        }
+        #atu-screen-terminal.collapsed {
+            max-height: 34px !important;
+            top: 4px !important;
+        }
+        #atu-terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 5px 10px;
+            min-height: 28px;
+            border-bottom: 1px solid rgba(0, 255, 102, 0.2);
+            flex-shrink: 0;
+        }
+        .atu-term-title {
+            color: #00ff66;
+            font-size: 10px;
+            font-weight: bold;
+            text-shadow: 0 0 6px rgba(0, 0, 0, 0.85);
+        }
+        .atu-term-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        .atu-term-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+        .atu-term-slider {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 60, 60, 0.45);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 102, 0.35);
+            cursor: pointer;
+            transition: background 0.25s ease;
+        }
+        .atu-term-slider::before {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            left: 2px;
+            top: 2px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: transform 0.25s ease;
+        }
+        .atu-term-switch input:checked + .atu-term-slider {
+            background: rgba(0, 255, 102, 0.55);
+        }
+        .atu-term-switch input:checked + .atu-term-slider::before {
+            transform: translateX(20px);
+        }
+        #atu-terminal-body {
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            padding: 8px 12px;
+            flex: 1;
+            min-height: 0;
             scrollbar-width: thin;
             scrollbar-color: rgba(0, 255, 102, 0.5) transparent;
         }
-        #atu-screen-terminal::-webkit-scrollbar {
+        #atu-screen-terminal.collapsed #atu-terminal-body {
+            display: none;
+        }
+        #atu-terminal-body::-webkit-scrollbar {
             width: 4px;
         }
-        #atu-screen-terminal::-webkit-scrollbar-track {
+        #atu-terminal-body::-webkit-scrollbar-track {
             background: transparent;
         }
-        #atu-screen-terminal::-webkit-scrollbar-thumb {
+        #atu-terminal-body::-webkit-scrollbar-thumb {
             background: rgba(0, 255, 102, 0.45);
             border-radius: 4px;
         }
@@ -127,9 +196,15 @@
                 width: auto;
                 font-size: 9.5px;
                 max-height: 32vh;
-                padding: 8px 10px;
                 backdrop-filter: blur(4px);
                 -webkit-backdrop-filter: blur(4px);
+            }
+            #atu-screen-terminal.collapsed {
+                top: 2px !important;
+                max-height: 30px !important;
+            }
+            #atu-terminal-body {
+                padding: 6px 8px;
             }
             .scan-wave {
                 width: 40px;
@@ -168,7 +243,6 @@
         }
         #atu-market-hud {
             padding: 4px 8px;
-            border-radius: 6px;
             background: transparent;
             border: none;
             border-left: 1px solid rgba(0, 255, 102, 0.25);
@@ -207,6 +281,108 @@
                 font-size: 8.5px;
             }
         }
+        #atu-login-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999999;
+            background: transparent;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-shadow: none;
+        }
+        #atu-login-box {
+            width: min(340px, 92vw);
+            padding: 24px 22px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 102, 0.35);
+            background: transparent;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            box-shadow: none;
+            font-family: Consolas, 'Courier New', monospace;
+            text-align: center;
+        }
+        #atu-login-box h2 {
+            color: #00ff66;
+            font-size: 16px;
+            margin: 0 0 6px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+        }
+        #atu-login-box p {
+            color: #9ecfb8;
+            font-size: 11px;
+            margin: 0 0 18px;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+        }
+        #atu-login-pass {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 102, 0.35);
+            background: transparent;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            color: #00ff66;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            outline: none;
+            box-sizing: border-box;
+            margin-bottom: 12px;
+            box-shadow: none;
+        }
+        #atu-login-pass::placeholder {
+            color: rgba(0, 255, 102, 0.45);
+        }
+        #atu-login-pass:focus {
+            border-color: #00ff66;
+        }
+        #atu-login-btn {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(0, 255, 102, 0.55);
+            border-radius: 8px;
+            background: transparent;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            color: #00ff66;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: none;
+            text-shadow: 0 0 6px rgba(0, 0, 0, 0.85);
+        }
+        #atu-login-btn:hover {
+            border-color: #00ff66;
+            color: #ffffff;
+        }
+        #atu-login-error {
+            color: #ff4444;
+            font-size: 11px;
+            min-height: 16px;
+            margin-top: 10px;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+        }
+        #atu-login-telegram {
+            display: inline-block;
+            margin-top: 16px;
+            color: #7ec8a4;
+            font-size: 11px;
+            text-decoration: none;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+        }
+        #atu-login-telegram:hover {
+            color: #00ff66;
+        }
+        #atu-login-telegram span {
+            color: #00ff66;
+            font-weight: bold;
+        }
     `;
     document.head.appendChild(style);
 
@@ -224,7 +400,78 @@
 
     widgetWrap.appendChild(scanBtn);
     widgetWrap.appendChild(marketHud);
+    widgetWrap.style.display = 'none';
     document.body.appendChild(widgetWrap);
+
+    const AUTH_PASSWORD = 'aldi';
+    const AUTH_STORAGE_KEY = 'atu_bot_auth';
+    let isAuthenticated = sessionStorage.getItem(AUTH_STORAGE_KEY) === '1';
+    let loginOverlay = null;
+    let marketHudInterval = null;
+
+    function showLoginPage() {
+        if (loginOverlay) {
+            loginOverlay.style.display = 'flex';
+            return;
+        }
+
+        loginOverlay = document.createElement('div');
+        loginOverlay.id = 'atu-login-overlay';
+        loginOverlay.innerHTML = `
+            <div id="atu-login-box">
+                <h2>ATU BOT LOGIN</h2>
+                <p>Enter password to activate the system</p>
+                <input id="atu-login-pass" type="password" placeholder="Password" autocomplete="off" />
+                <button id="atu-login-btn" type="button">LOGIN</button>
+                <div id="atu-login-error"></div>
+                <a id="atu-login-telegram" href="https://t.me/Owneraldifx" target="_blank" rel="noopener noreferrer">
+                    Contact Developer: <span>@Owneraldifx</span>
+                </a>
+            </div>
+        `;
+        document.body.appendChild(loginOverlay);
+
+        const passInput = loginOverlay.querySelector('#atu-login-pass');
+        const loginBtn = loginOverlay.querySelector('#atu-login-btn');
+        const errorEl = loginOverlay.querySelector('#atu-login-error');
+
+        const tryLogin = () => {
+            if (passInput.value === AUTH_PASSWORD) {
+                activateBot();
+                return;
+            }
+            errorEl.textContent = 'Wrong password! Access denied.';
+            passInput.value = '';
+            passInput.focus();
+        };
+
+        loginBtn.addEventListener('click', tryLogin);
+        passInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') tryLogin();
+        });
+        passInput.focus();
+    }
+
+    function activateBot() {
+        isAuthenticated = true;
+        sessionStorage.setItem(AUTH_STORAGE_KEY, '1');
+
+        if (loginOverlay) loginOverlay.style.display = 'none';
+        widgetWrap.style.display = 'flex';
+
+        updateMarketHud();
+        if (!marketHudInterval) {
+            marketHudInterval = setInterval(updateMarketHud, 1500);
+        }
+    }
+
+    function bootApp() {
+        if (isAuthenticated) {
+            activateBot();
+        } else {
+            showLoginPage();
+        }
+    }
 
     let isDragging = false;
     let offsetX = 0, offsetY = 0;
@@ -298,25 +545,76 @@
     const PAIR_CORE_REGEX = /([A-Z]{3}\/[A-Z]{3})/i;
     const MARKET_CFG = { marketSel: 'div.l5ftG', payoutSel: 'div.UloGw' };
     let screenTerminal = null;
+    let terminalBody = null;
+    let terminalCollapsed = false;
     let typeQueue = [];
     let isTypingOnScreen = false;
 
     function initScreenTerminal() {
         if (screenTerminal) return;
+
         screenTerminal = document.createElement('div');
         screenTerminal.id = 'atu-screen-terminal';
+
+        const header = document.createElement('div');
+        header.id = 'atu-terminal-header';
+
+        const title = document.createElement('span');
+        title.className = 'atu-term-title';
+        title.textContent = 'ATU LIVE SIGNAL';
+
+        const switchLabel = document.createElement('label');
+        switchLabel.className = 'atu-term-switch';
+        switchLabel.title = 'Show / Hide panel';
+
+        const switchInput = document.createElement('input');
+        switchInput.type = 'checkbox';
+        switchInput.checked = true;
+
+        const switchSlider = document.createElement('span');
+        switchSlider.className = 'atu-term-slider';
+
+        switchInput.addEventListener('change', () => {
+            setTerminalCollapsed(!switchInput.checked);
+        });
+
+        switchLabel.appendChild(switchInput);
+        switchLabel.appendChild(switchSlider);
+        header.appendChild(title);
+        header.appendChild(switchLabel);
+
+        terminalBody = document.createElement('div');
+        terminalBody.id = 'atu-terminal-body';
+
+        screenTerminal.appendChild(header);
+        screenTerminal.appendChild(terminalBody);
         document.body.appendChild(screenTerminal);
+    }
+
+    function setTerminalCollapsed(collapsed) {
+        terminalCollapsed = collapsed;
+        if (!screenTerminal) return;
+
+        const switchInput = screenTerminal.querySelector('.atu-term-switch input');
+        if (switchInput) switchInput.checked = !collapsed;
+
+        if (collapsed) {
+            screenTerminal.classList.add('collapsed');
+        } else {
+            screenTerminal.classList.remove('collapsed');
+            screenTerminal.style.top = '';
+        }
     }
 
     function clearScreenTerminal() {
         typeQueue = [];
         isTypingOnScreen = false;
-        if (screenTerminal) screenTerminal.innerHTML = '';
+        if (terminalBody) terminalBody.innerHTML = '';
     }
 
     function showScreenTerminal() {
         initScreenTerminal();
-        screenTerminal.style.display = 'block';
+        screenTerminal.style.display = 'flex';
     }
 
     function hideScreenTerminal() {
@@ -347,7 +645,7 @@
             cursor.className = 'atu-term-cursor';
             cursor.textContent = '▌';
             line.appendChild(cursor);
-            screenTerminal.appendChild(line);
+            terminalBody.appendChild(line);
 
             let index = 0;
             const text = item.text || '';
@@ -356,12 +654,12 @@
                 if (index < text.length) {
                     cursor.before(document.createTextNode(text[index]));
                     index++;
-                    screenTerminal.scrollTop = screenTerminal.scrollHeight;
+                    terminalBody.scrollTop = terminalBody.scrollHeight;
                     setTimeout(typeNext, item.charDelay || 14);
                     return;
                 }
                 cursor.remove();
-                screenTerminal.scrollTop = screenTerminal.scrollHeight;
+                terminalBody.scrollTop = terminalBody.scrollHeight;
                 setTimeout(resolve, item.linePause || 60);
             };
 
@@ -574,7 +872,7 @@
     function updateMarketHud() {
         const info = getActiveMarketInfo();
         const payout = info.payout !== 'N/A' ? info.payout : getMarketPayout(info.name);
-        marketHud.innerHTML = `📊 ${info.name}<br><span class="atu-hud-sub">Payout: ${payout} | ${info.source}</span>`;
+        marketHud.innerHTML = `📊 ${info.name}<br><span class="atu-hud-sub">Payout: ${payout}</span>`;
     }
 
     function getTradeButtons() {
@@ -594,8 +892,7 @@
         return { upButton, downButton };
     }
 
-    updateMarketHud();
-    setInterval(updateMarketHud, 1500);
+    bootApp();
 
     function rand(min, max, decimals = 0) {
         const value = Math.random() * (max - min) + min;
@@ -731,6 +1028,10 @@
     }
 
     scanBtn.addEventListener('click', () => {
+        if (!isAuthenticated) {
+            showLoginPage();
+            return;
+        }
         if (scanBtn.getAttribute('data-dragged') === 'true') return;
         if (isProcessing) return;
         isProcessing = true;
